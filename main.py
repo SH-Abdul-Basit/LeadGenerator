@@ -1,27 +1,13 @@
 from google import genai
 from seleniumbase import SB
+import os
+from dotenv import load_dotenv
 
-
+load_dotenv()
+API_KEY = os.getenv("GEN_API_KEY")
 client = genai.Client(api_key=API_KEY)
 
-template = """
-Hi {{firstName}},
 
-{{Compliment}}
-
-I came across your business online and became curious about how well your current website is performing for you. How has it been working for attracting customers and generating leads, {{firstName}}?
-
-I believe my team can help improve your online presence and take your business to the next level. We specialize in modern website development and optimization, creating fast, professional, and user-friendly websites that help businesses build trust and convert more visitors into customers.
-
-From my initial look, I noticed a few areas where your website and overall user experience could be improved to better showcase your services, improve performance, and increase customer engagement.
-
-I already have a few ideas that could help your business stand out online, and I’d love to share them with you. Would you be available for a quick chat sometime this week?
-
-Looking forward to hearing from you.
-
-Best regards,
-Abdul Basit
-"""
 
 with SB(uc=True, incognito=True, xvfb=True) as sb:
     url = "https://www.google.com"
@@ -48,8 +34,8 @@ with SB(uc=True, incognito=True, xvfb=True) as sb:
                 # sb.assert_element("#auto-next-btn")
 
                 sb.driver.uc_click("#auto-next-btn")
-                sb.driver.uc_switch_to_frame("iframe")
-                sb.uc_gui_click_captcha("span.recaptcha-checkbox")
+                # sb.driver.uc_switch_to_frame("iframe")
+                # sb.uc_gui_click_captcha("span.recaptcha-checkbox")
                 # btn.click()
                 # sb.reconnect(4)
         # break
@@ -71,6 +57,8 @@ with SB(uc=True, incognito=True, xvfb=True) as sb:
     )
 
     print(response.text)
+    with open("output.csv", "w") as file:
+        file.write(response.text)
 
 
 
